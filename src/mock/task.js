@@ -1,13 +1,13 @@
-import {COLORS} from "../const.js";
-import {getRandomInteger} from "../utils/common.js";
-
-const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+import dayjs from 'dayjs';
+import {nanoid} from 'nanoid';
+import {COLORS} from '../const.js';
+import {getRandomInteger} from '../utils/common.js';
 
 const generateDescription = () => {
   const descriptions = [
-    `Изучить теорию`,
-    `Сделать домашку`,
-    `Пройти интенсив на соточку`
+    'Изучить теорию',
+    'Сделать домашку',
+    'Пройти интенсив на соточку',
   ];
 
   const randomIndex = getRandomInteger(0, descriptions.length - 1);
@@ -29,17 +29,8 @@ const generateDate = () => {
 
   const maxDaysGap = 7;
   const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
-  const currentDate = new Date();
 
-  // По заданию дедлайн у задачи устанавливается без учёта времеми,
-  // но объект даты без времени завести нельзя,
-  // поэтому будем считать срок у всех задач -
-  // это 23:59:59 установленной даты
-  currentDate.setHours(23, 59, 59, 999);
-
-  currentDate.setDate(currentDate.getDate() + daysGap);
-
-  return new Date(currentDate);
+  return dayjs().add(daysGap, 'day').toDate();
 };
 
 const generateRepeating = () => {
@@ -50,7 +41,7 @@ const generateRepeating = () => {
     th: false,
     fr: Boolean(getRandomInteger(0, 1)),
     sa: false,
-    su: false
+    su: false,
   };
 };
 
@@ -71,16 +62,16 @@ export const generateTask = () => {
       th: false,
       fr: false,
       sa: false,
-      su: false
+      su: false,
     };
 
   return {
-    id: generateId(),
+    id: nanoid(),
     description: generateDescription(),
     dueDate,
     repeating,
     color: getRandomColor(),
     isArchive: Boolean(getRandomInteger(0, 1)),
-    isFavorite: Boolean(getRandomInteger(0, 1))
+    isFavorite: Boolean(getRandomInteger(0, 1)),
   };
 };

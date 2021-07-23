@@ -1,13 +1,13 @@
-import SmartView from "./smart.js";
-import {COLORS} from "../const.js";
-import {isTaskRepeating, formatTaskDueDate} from "../utils/task.js";
-import flatpickr from "flatpickr";
+import SmartView from './smart.js';
+import {COLORS} from '../const.js';
+import {isTaskRepeating, formatTaskDueDate} from '../utils/task.js';
+import flatpickr from 'flatpickr';
 
-import "../../node_modules/flatpickr/dist/flatpickr.min.css";
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
 const BLANK_TASK = {
   color: COLORS[0],
-  description: ``,
+  description: '',
   dueDate: null,
   repeating: {
     mo: false,
@@ -16,16 +16,17 @@ const BLANK_TASK = {
     th: false,
     fr: false,
     sa: false,
-    su: false
+    su: false,
   },
   isArchive: false,
-  isFavorite: false
+  isFavorite: false,
 };
 
 const createTaskEditDateTemplate = (dueDate, isDueDate) => {
   return `<button class="card__date-deadline-toggle" type="button">
-      date: <span class="card__date-status">${isDueDate ? `yes` : `no`}</span>
+      date: <span class="card__date-status">${isDueDate ? 'yes' : 'no'}</span>
     </button>
+
     ${isDueDate ? `<fieldset class="card__date-deadline">
       <label class="card__input-deadline-wrap">
         <input
@@ -36,14 +37,15 @@ const createTaskEditDateTemplate = (dueDate, isDueDate) => {
           value="${formatTaskDueDate(dueDate)}"
         />
       </label>
-    </fieldset>` : ``}
+    </fieldset>` : ''}
   `;
 };
 
 const createTaskEditRepeatingTemplate = (repeating, isRepeating) => {
   return `<button class="card__repeat-toggle" type="button">
-    repeat:<span class="card__repeat-status">${isRepeating ? `yes` : `no`}</span>
+    repeat:<span class="card__repeat-status">${isRepeating ? 'yes' : 'no'}</span>
   </button>
+
   ${isRepeating ? `<fieldset class="card__repeat-days">
     <div class="card__repeat-days-inner">
       ${Object.entries(repeating).map(([day, repeat]) => `<input
@@ -52,13 +54,13 @@ const createTaskEditRepeatingTemplate = (repeating, isRepeating) => {
         id="repeat-${day}"
         name="repeat"
         value="${day}"
-        ${repeat ? `checked` : ``}
+        ${repeat ? 'checked' : ''}
       />
       <label class="card__repeat-day" for="repeat-${day}"
         >${day}</label
-      >`).join(``)}
+      >`).join('')}
     </div>
-  </fieldset>` : ``}`;
+  </fieldset>` : ''}`;
 };
 
 const createTaskEditColorsTemplate = (currentColor) => {
@@ -68,13 +70,13 @@ const createTaskEditColorsTemplate = (currentColor) => {
     class="card__color-input card__color-input--${color} visually-hidden"
     name="color"
     value="${color}"
-    ${currentColor === color ? `checked` : ``}
+    ${currentColor === color ? 'checked' : ''}
   />
   <label
     for="color-${color}"
     class="card__color card__color--${color}"
     >${color}</label
-  >`).join(``);
+  >`).join('');
 };
 
 const createTaskEditTemplate = (data) => {
@@ -83,8 +85,8 @@ const createTaskEditTemplate = (data) => {
   const dateTemplate = createTaskEditDateTemplate(dueDate, isDueDate);
 
   const repeatingClassName = isRepeating
-    ? `card--repeat`
-    : ``;
+    ? 'card--repeat'
+    : '';
   const repeatingTemplate = createTaskEditRepeatingTemplate(repeating, isRepeating);
 
   const colorsTemplate = createTaskEditColorsTemplate(color);
@@ -99,6 +101,7 @@ const createTaskEditTemplate = (data) => {
             <use xlink:href="#wave"></use>
           </svg>
         </div>
+
         <div class="card__textarea-wrap">
           <label>
             <textarea
@@ -108,13 +111,16 @@ const createTaskEditTemplate = (data) => {
             >${description}</textarea>
           </label>
         </div>
+
         <div class="card__settings">
           <div class="card__details">
             <div class="card__dates">
               ${dateTemplate}
+
               ${repeatingTemplate}
             </div>
           </div>
+
           <div class="card__colors-inner">
             <h3 class="card__colors-title">Color</h3>
             <div class="card__colors-wrap">
@@ -122,8 +128,9 @@ const createTaskEditTemplate = (data) => {
             </div>
           </div>
         </div>
+
         <div class="card__status-btns">
-          <button class="card__save" type="submit" ${isSubmitDisabled ? `disabled` : ``}>save</button>
+          <button class="card__save" type="submit" ${isSubmitDisabled ? 'disabled' : ''}>save</button>
           <button class="card__delete" type="button">delete</button>
         </div>
       </div>
@@ -151,7 +158,7 @@ export default class TaskEdit extends SmartView {
 
   reset(task) {
     this.updateData(
-        TaskEdit.parseTaskToData(task)
+      TaskEdit.parseTaskToData(task),
     );
   }
 
@@ -177,43 +184,46 @@ export default class TaskEdit extends SmartView {
       // flatpickr есть смысл инициализировать только в случае,
       // если поле выбора даты доступно для заполнения
       this._datepicker = flatpickr(
-          this.getElement().querySelector(`.card__date`),
-          {
-            dateFormat: `j F`,
-            defaultDate: this._data.dueDate,
-            onChange: this._dueDateChangeHandler // На событие flatpickr передаём наш колбэк
-          }
+        this.getElement().querySelector('.card__date'),
+        {
+          dateFormat: 'j F',
+          defaultDate: this._data.dueDate,
+          onChange: this._dueDateChangeHandler, // На событие flatpickr передаём наш колбэк
+        },
       );
     }
   }
 
   _setInnerHandlers() {
     this.getElement()
-      .querySelector(`.card__date-deadline-toggle`)
-      .addEventListener(`click`, this._dueDateToggleHandler);
+      .querySelector('.card__date-deadline-toggle')
+      .addEventListener('click', this._dueDateToggleHandler);
     this.getElement()
-      .querySelector(`.card__repeat-toggle`)
-      .addEventListener(`click`, this._repeatingToggleHandler);
+      .querySelector('.card__repeat-toggle')
+      .addEventListener('click', this._repeatingToggleHandler);
     this.getElement()
-      .querySelector(`.card__text`)
-      .addEventListener(`input`, this._descriptionInputHandler);
+      .querySelector('.card__text')
+      .addEventListener('input', this._descriptionInputHandler);
 
     if (this._data.isRepeating) {
       this.getElement()
-        .querySelector(`.card__repeat-days-inner`)
-        .addEventListener(`change`, this._repeatingChangeHandler);
+        .querySelector('.card__repeat-days-inner')
+        .addEventListener('change', this._repeatingChangeHandler);
     }
 
     this.getElement()
-      .querySelector(`.card__colors-wrap`)
-      .addEventListener(`change`, this._colorChangeHandler);
+      .querySelector('.card__colors-wrap')
+      .addEventListener('change', this._colorChangeHandler);
   }
 
   _dueDateToggleHandler(evt) {
     evt.preventDefault();
     this.updateData({
       isDueDate: !this._data.isDueDate,
-      isRepeating: !this._data.isDueDate ? false : this._data.isRepeating
+      // Логика следующая: если выбор даты нужно показать,
+      // то есть когда "!this._data.isDueDate === true",
+      // тогда isRepeating должно быть строго false.
+      isRepeating: !this._data.isDueDate ? false : this._data.isRepeating,
     });
   }
 
@@ -221,26 +231,21 @@ export default class TaskEdit extends SmartView {
     evt.preventDefault();
     this.updateData({
       isRepeating: !this._data.isRepeating,
-      isDueDate: !this._data.isRepeating ? false : this._data.isDueDate
+      // Аналогично, но наоборот, для повторения
+      isDueDate: !this._data.isRepeating ? false : this._data.isDueDate,
     });
   }
 
   _descriptionInputHandler(evt) {
     evt.preventDefault();
     this.updateData({
-      description: evt.target.value
+      description: evt.target.value,
     }, true);
   }
 
   _dueDateChangeHandler([userDate]) {
-    // По заданию дедлайн у задачи устанавливается без учёта времеми,
-    // но объект даты без времени завести нельзя,
-    // поэтому будем считать срок у всех задач -
-    // это 23:59:59 установленной даты
-    userDate.setHours(23, 59, 59, 999);
-
     this.updateData({
-      dueDate: userDate
+      dueDate: userDate,
     });
   }
 
@@ -248,17 +253,17 @@ export default class TaskEdit extends SmartView {
     evt.preventDefault();
     this.updateData({
       repeating: Object.assign(
-          {},
-          this._data.repeating,
-          {[evt.target.value]: evt.target.checked}
-      )
+        {},
+        this._data.repeating,
+        {[evt.target.value]: evt.target.checked},
+      ),
     });
   }
 
   _colorChangeHandler(evt) {
     evt.preventDefault();
     this.updateData({
-      color: evt.target.value
+      color: evt.target.value,
     });
   }
 
@@ -269,17 +274,17 @@ export default class TaskEdit extends SmartView {
 
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
-    this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
+    this.getElement().querySelector('form').addEventListener('submit', this._formSubmitHandler);
   }
 
   static parseTaskToData(task) {
     return Object.assign(
-        {},
-        task,
-        {
-          isDueDate: task.dueDate !== null,
-          isRepeating: isTaskRepeating(task.repeating)
-        }
+      {},
+      task,
+      {
+        isDueDate: task.dueDate !== null,
+        isRepeating: isTaskRepeating(task.repeating),
+      },
     );
   }
 
@@ -298,7 +303,7 @@ export default class TaskEdit extends SmartView {
         th: false,
         fr: false,
         sa: false,
-        su: false
+        su: false,
       };
     }
 

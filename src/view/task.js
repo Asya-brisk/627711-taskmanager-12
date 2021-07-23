@@ -1,5 +1,5 @@
-import AbstractView from "./abstract.js";
-import {isTaskExpired, isTaskRepeating, formatTaskDueDate} from "../utils/task.js";
+import AbstractView from './abstract.js';
+import {isTaskExpired, isTaskRepeating, formatTaskDueDate} from '../utils/task.js';
 
 const createTaskTemplate = (task) => {
   const {color, description, dueDate, repeating, isArchive, isFavorite} = task;
@@ -7,20 +7,20 @@ const createTaskTemplate = (task) => {
   const date = formatTaskDueDate(dueDate);
 
   const deadlineClassName = isTaskExpired(dueDate)
-    ? `card--deadline`
-    : ``;
+    ? 'card--deadline'
+    : '';
 
   const repeatClassName = isTaskRepeating(repeating)
-    ? `card--repeat`
-    : ``;
+    ? 'card--repeat'
+    : '';
 
   const archiveClassName = isArchive
-    ? `card__btn--archive card__btn--disabled`
-    : `card__btn--archive`;
+    ? 'card__btn--archive card__btn--disabled'
+    : 'card__btn--archive';
 
   const favoriteClassName = isFavorite
-    ? `card__btn--favorites card__btn--disabled`
-    : `card__btn--favorites`;
+    ? 'card__btn--favorites card__btn--disabled'
+    : 'card__btn--favorites';
 
   return `<article class="card card--${color} ${deadlineClassName} ${repeatClassName}">
     <div class="card__form">
@@ -39,14 +39,17 @@ const createTaskTemplate = (task) => {
             favorites
           </button>
         </div>
+
         <div class="card__color-bar">
           <svg class="card__color-bar-wave" width="100%" height="10">
             <use xlink:href="#wave"></use>
           </svg>
         </div>
+
         <div class="card__textarea-wrap">
           <p class="card__text">${description}</p>
         </div>
+
         <div class="card__settings">
           <div class="card__details">
             <div class="card__dates">
@@ -94,16 +97,16 @@ export default class Task extends AbstractView {
 
   setEditClickHandler(callback) {
     this._callback.editClick = callback;
-    this.getElement().querySelector(`.card__btn--edit`).addEventListener(`click`, this._editClickHandler);
+    this.getElement().querySelector('.card__btn--edit').addEventListener('click', this._editClickHandler);
   }
 
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
-    this.getElement().querySelector(`.card__btn--favorites`).addEventListener(`click`, this._favoriteClickHandler);
+    this.getElement().querySelector('.card__btn--favorites').addEventListener('click', this._favoriteClickHandler);
   }
 
   setArchiveClickHandler(callback) {
     this._callback.archiveClick = callback;
-    this.getElement().querySelector(`.card__btn--archive`).addEventListener(`click`, this._archiveClickHandler);
+    this.getElement().querySelector('.card__btn--archive').addEventListener('click', this._archiveClickHandler);
   }
 }

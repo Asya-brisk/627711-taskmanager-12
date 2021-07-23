@@ -1,10 +1,11 @@
-import TaskView from "../view/task.js";
-import TaskEditView from "../view/task-edit.js";
-import {render, RenderPosition, replace, remove} from "../utils/render.js";
+import TaskView from '../view/task.js';
+import TaskEditView from '../view/task-edit.js';
+import {render, RenderPosition, replace, remove} from '../utils/render.js';
+import {UserAction, UpdateType} from '../const.js';
 
 const Mode = {
-  DEFAULT: `DEFAULT`,
-  EDITING: `EDITING`
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
 };
 
 export default class Task {
@@ -68,19 +69,19 @@ export default class Task {
 
   _replaceCardToForm() {
     replace(this._taskEditComponent, this._taskComponent);
-    document.addEventListener(`keydown`, this._escKeyDownHandler);
+    document.addEventListener('keydown', this._escKeyDownHandler);
     this._changeMode();
     this._mode = Mode.EDITING;
   }
 
   _replaceFormToCard() {
     replace(this._taskComponent, this._taskEditComponent);
-    document.removeEventListener(`keydown`, this._escKeyDownHandler);
+    document.removeEventListener('keydown', this._escKeyDownHandler);
     this._mode = Mode.DEFAULT;
   }
 
   _escKeyDownHandler(evt) {
-    if (evt.key === `Escape` || evt.key === `Esc`) {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this._taskEditComponent.reset(this._task);
       this._replaceFormToCard();
@@ -93,30 +94,38 @@ export default class Task {
 
   _handleFavoriteClick() {
     this._changeData(
-        Object.assign(
-            {},
-            this._task,
-            {
-              isFavorite: !this._task.isFavorite
-            }
-        )
+      UserAction.UPDATE_TASK,
+      UpdateType.MINOR,
+      Object.assign(
+        {},
+        this._task,
+        {
+          isFavorite: !this._task.isFavorite,
+        },
+      ),
     );
   }
 
   _handleArchiveClick() {
     this._changeData(
-        Object.assign(
-            {},
-            this._task,
-            {
-              isArchive: !this._task.isArchive
-            }
-        )
+      UserAction.UPDATE_TASK,
+      UpdateType.MINOR,
+      Object.assign(
+        {},
+        this._task,
+        {
+          isArchive: !this._task.isArchive,
+        },
+      ),
     );
   }
 
   _handleFormSubmit(task) {
-    this._changeData(task);
+    this._changeData(
+      UserAction.UPDATE_TASK,
+      UpdateType.MINOR,
+      task,
+    );
     this._replaceFormToCard();
   }
 }

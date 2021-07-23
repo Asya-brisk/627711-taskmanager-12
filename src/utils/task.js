@@ -1,30 +1,11 @@
-import moment from "moment";
-
-const getCurrentDate = () => {
-  const currentDate = new Date();
-  currentDate.setHours(23, 59, 59, 999);
-
-  return new Date(currentDate);
-};
+import dayjs from 'dayjs';
 
 export const isTaskExpired = (dueDate) => {
-  if (dueDate === null) {
-    return false;
-  }
-
-  const currentDate = getCurrentDate();
-
-  return currentDate.getTime() > dueDate.getTime();
+  return dueDate === null ? false : dayjs().isAfter(dueDate, 'D');
 };
 
 export const isTaskExpiringToday = (dueDate) => {
-  if (dueDate === null) {
-    return false;
-  }
-
-  const currentDate = getCurrentDate();
-
-  return currentDate.getTime() === dueDate.getTime();
+  return dueDate === null ? false : dayjs(dueDate).isSame(dayjs(), 'D');
 };
 
 export const isTaskRepeating = (repeating) => {
@@ -32,13 +13,15 @@ export const isTaskRepeating = (repeating) => {
 };
 
 export const formatTaskDueDate = (dueDate) => {
-  if (!(dueDate instanceof Date)) {
-    return ``;
+  if (!dueDate) {
+    return '';
   }
 
-  return moment(dueDate).format(`D MMMM`);
+  return dayjs(dueDate).format('D MMMM');
 };
 
+// Функция помещает задачи без даты в конце списка,
+// возвращая нужный вес для колбэка sort
 const getWeightForNullDate = (dateA, dateB) => {
   if (dateA === null && dateB === null) {
     return 0;
@@ -62,7 +45,7 @@ export const sortTaskUp = (taskA, taskB) => {
     return weight;
   }
 
-  return taskA.dueDate.getTime() - taskB.dueDate.getTime();
+  return dayjs(taskA.dueDate).diff(dayjs(taskB.dueDate));
 };
 
 export const sortTaskDown = (taskA, taskB) => {
@@ -72,5 +55,5 @@ export const sortTaskDown = (taskA, taskB) => {
     return weight;
   }
 
-  return taskB.dueDate.getTime() - taskA.dueDate.getTime();
+  return dayjs(taskB.dueDate).diff(dayjs(taskA.dueDate));
 };
