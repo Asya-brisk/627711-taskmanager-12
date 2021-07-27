@@ -1,8 +1,8 @@
-import Abstract from "../view/abstract.js";
+import Abstract from '../view/abstract.js';
 
 export const RenderPosition = {
-  AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`
+  AFTERBEGIN: 'afterbegin',
+  BEFOREEND: 'beforeend',
 };
 
 export const render = (container, child, place) => {
@@ -24,20 +24,19 @@ export const render = (container, child, place) => {
   }
 };
 
-export const renderTemplate = (container, template, place) => {
-  if (container instanceof Abstract) {
-    container = container.getElement();
-  }
-
-  container.insertAdjacentHTML(place, template);
-};
-
+// Принцип работы прост:
+// 1. создаём пустой div-блок
+// 2. берём HTML в виде строки и вкладываем в этот div-блок, превращая в DOM-элемент
+// 3. возвращаем этот DOM-элемент
 export const createElement = (template) => {
-  const newElement = document.createElement(`div`);
-  newElement.innerHTML = template;
+  const newElement = document.createElement('div'); // 1
+  newElement.innerHTML = template; // 2
 
-  return newElement.firstChild;
+  return newElement.firstChild; // 3
 };
+// Единственный нюанс, что HTML в строке должен иметь общую обёртку,
+// то есть быть чем-то вроде <nav><a>Link 1</a><a>Link 2</a></nav>,
+// а не просто <a>Link 1</a><a>Link 2</a>
 
 export const replace = (newChild, oldChild) => {
   if (oldChild instanceof Abstract) {
@@ -51,15 +50,19 @@ export const replace = (newChild, oldChild) => {
   const parent = oldChild.parentElement;
 
   if (parent === null || oldChild === null || newChild === null) {
-    throw new Error(`Can't replace unexisting elements`);
+    throw new Error('Can\'t replace unexisting elements');
   }
 
   parent.replaceChild(newChild, oldChild);
 };
 
 export const remove = (component) => {
+  if (component === null) {
+    return;
+  }
+
   if (!(component instanceof Abstract)) {
-    throw new Error(`Can remove only components`);
+    throw new Error('Can remove only components');
   }
 
   component.getElement().remove();
